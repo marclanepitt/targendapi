@@ -20,6 +20,7 @@ from ..models import UserProfile
 
 
 class KnoxLoginView(LoginView):
+    print("hi")
     def post(self, request, format=None):
         token = AuthToken.objects.create(request.user)
         user_logged_in.send(sender=request.user.__class__, request=request, user=request.user)
@@ -38,7 +39,7 @@ class UserDetailView(generics.RetrieveAPIView):
     """
 
     queryset = User.objects.all()
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UserDetailSerializer
 
     def get_object(self):
