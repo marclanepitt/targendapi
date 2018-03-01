@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     #Project Apps
     'apps.users',
     'apps.courseselect',
+    'apps.tarcalendar',
     
     # 3rd party apps
     'debug_toolbar',

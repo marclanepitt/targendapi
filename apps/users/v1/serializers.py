@@ -10,10 +10,11 @@ from apps.users.models import UserProfile
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ("id", "major", "graduation_year")
+        fields = ("id", "major", "graduation_year","courses")
 
 class UserDetailSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
+    userprofile = UserProfileSerializer()
 
     def get_full_name(self, obj):
         return '{} {}'.format(obj.first_name, obj.last_name)
@@ -21,10 +22,11 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'full_name', 'email','last_login', 'is_active',
-                  'date_joined',)
+                  'date_joined','userprofile',)
 
 class UserDetailRestKnoxFix(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
+    userprofile = UserProfileSerializer()
 
     def get_full_name(self, obj):
         return '{} {}'.format(obj.first_name, obj.last_name)
@@ -32,7 +34,7 @@ class UserDetailRestKnoxFix(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'full_name', 'email', 'last_login', 'is_active',
-                  'date_joined',)
+                  'date_joined','userprofile')
 
 
 class RegistrationSerializer(RegisterSerializer):

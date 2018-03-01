@@ -10,9 +10,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_auth.registration.views import RegisterView
 from rest_framework.response import Response
 from rest_framework import status
+import json
 
 from . import serializers
 from ..models import UserProfile
+from ...courseselect.models import Course
 
 # {
 # "auth":{"username":"q@q.com","password":"qqqqqqqq"}
@@ -20,7 +22,6 @@ from ..models import UserProfile
 
 
 class KnoxLoginView(LoginView):
-    print("hi")
     def post(self, request, format=None):
         token = AuthToken.objects.create(request.user)
         user_logged_in.send(sender=request.user.__class__, request=request, user=request.user)
@@ -32,11 +33,6 @@ class KnoxLoginView(LoginView):
         })
 
 class UserDetailView(generics.RetrieveAPIView):
-    """
-    Return information for a specific user.
-    Passing `me` instead of a user pk in the url will return information about the user making the request.
-    (i.e. The currently authenticated user)
-    """
 
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
@@ -65,10 +61,22 @@ class RegistrationView(RegisterView):
         return data
 
 
-class UserProfileUpdateView(generics.GenericAPIView,mixins.UpdateModelMixin):
+class UserCourseAddView(generics.GenericAPIView,mixins.UpdateModelMixin):
     serializer_class = serializers.UserProfileSerializer
     queryset = UserProfile.objects.all()
     permission_classes = (IsAuthenticated,)
 
     def put(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
+        course_id = self.request.query_params.get('course', None)
+        if course_id is not None:
+            user = get_object_or_404(User,pk=self.request.user.id)
+            userprofile = get_object_or_404(UserProfile,user=self.request.user.id)
+            course = get_object_or_404(Course,pk=course_id)
+            userprofile.courses.add(course)
+            UserSerializer = serializers.UserDetailSerializer
+            user_corrected_data = UserSerializer(request.user).data
+            return Response({
+                'user': user_corrected_data,
+            })
+        else:
+            pass

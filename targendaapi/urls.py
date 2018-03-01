@@ -38,6 +38,7 @@ from apps.users.v1.views import RegistrationView, KnoxLoginView
 v1_urls = [
     url(r'^users/', include('apps.users.v1.urls', namespace='users')),
     url(r'^courses/', include('apps.courseselect.v1.urls',namespace="courses")),
+    url(r'^calendar/', include('apps.tarcalendar.v1.urls',namespace="calendar")),
 ]
 
 api_urls = [
