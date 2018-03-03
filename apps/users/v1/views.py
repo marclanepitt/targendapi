@@ -80,3 +80,23 @@ class UserCourseAddView(generics.GenericAPIView,mixins.UpdateModelMixin):
             })
         else:
             pass
+
+class UserCourseRemoveView(generics.GenericAPIView,mixins.UpdateModelMixin):
+    serializer_class = serializers.UserProfileSerializer
+    queryset = UserProfile.objects.all()
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request, *args, **kwargs):
+        course_id = self.request.query_params.get('course', None)
+        if course_id is not None:
+            user = get_object_or_404(User,pk=self.request.user.id)
+            userprofile = get_object_or_404(UserProfile,user=self.request.user.id)
+            course = get_object_or_404(Course,pk=course_id)
+            userprofile.courses.remove(course)
+            UserSerializer = serializers.UserDetailSerializer
+            user_corrected_data = UserSerializer(request.user).data
+            return Response({
+                'user': user_corrected_data,
+            })
+        else:
+            pass

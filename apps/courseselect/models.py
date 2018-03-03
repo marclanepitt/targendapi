@@ -10,6 +10,12 @@ class University(models.Model):
 	def __str__(self):
 		return self.name
 
+class CourseImage(models.Model):
+	image = models.ImageField()
+
+	def __str__(self):
+		return self.image.name
+
 class Course(models.Model):
 	university = models.ForeignKey(University)
 	department = models.CharField(max_length=6)
@@ -18,9 +24,13 @@ class Course(models.Model):
 	section = models.IntegerField()
 	instructor = models.CharField(max_length=30)
 	description = models.CharField(max_length=50)
+	assignment_total = models.IntegerField()
+	lecture_total = models.IntegerField()
+	test_total = models.IntegerField()
+
+	image = models.ForeignKey(CourseImage)
 
 	def __str__(self):
 		return '{} {}-{} {} ({})'.format(self.department,self.number,self.section,self.description,self.semester)
-
 
 #class Event(models.Model):

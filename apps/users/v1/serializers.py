@@ -10,7 +10,7 @@ from apps.users.models import UserProfile
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ("id", "major", "graduation_year","courses")
+        fields = ("id", "major", "graduation_year","courses","cal_request")
 
 class UserDetailSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()

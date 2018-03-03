@@ -19,4 +19,7 @@ class CourseListView(generics.ListAPIView):
 		section = self.request.query_params.get('section', None)
 		if section is not None:
 			queryset = queryset.filter(section=section)
+		semester = self.request.query_params.get('semester', None)
+		if semester is not None:
+			queryset = queryset.filter(semester=semester)
 		return queryset
