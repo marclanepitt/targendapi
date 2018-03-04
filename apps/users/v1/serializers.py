@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_auth.registration.serializers import RegisterSerializer
+from apps.tarcalendar.v1.serializers import CalendarRequestSerializer
 from rest_framework import serializers,exceptions
 from django.shortcuts import get_object_or_404
 
@@ -8,6 +9,7 @@ from apps.users.models import UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    cal_request = CalendarRequestSerializer()
     class Meta:
         model = UserProfile
         fields = ("id", "major", "graduation_year","courses","cal_request")

@@ -4,4 +4,6 @@ db.sqlite3
 
 */migrations/*
 
+apps/users/migrations/*
+
 venv*
