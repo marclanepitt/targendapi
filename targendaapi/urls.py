@@ -33,7 +33,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from apps.users.v1.views import RegistrationView, KnoxLoginView
+from apps.users.v1.views import RegistrationView, KnoxLoginView,PasswordResetFixView
 
 v1_urls = [
     url(r'^users/', include('apps.users.v1.urls', namespace='users')),
@@ -43,7 +43,8 @@ v1_urls = [
 
 api_urls = [
     url(r'^', include('django.contrib.auth.urls')),
-    url(r'^auth/login/',KnoxLoginView.as_view(),name="knox_login_hi"),    
+    url(r'^auth/login/',KnoxLoginView.as_view(),name="knox_login_hi"),
+    url(r'^auth/password/reset/$', PasswordResetFixView.as_view(), name="password_reset"),
     url(r'^auth/', include('knox.urls')),
     url(r'^auth/', include('rest_auth.urls')),
     url(r'^auth/registration/$', RegistrationView.as_view(), name="rest_register"),

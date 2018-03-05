@@ -7,3 +7,8 @@ db.sqlite3
 apps/users/migrations/*
 
 venv*
+venv/*
+
+client_secret.json
+
+sheets.googleapis.*

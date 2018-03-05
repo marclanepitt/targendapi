@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -90,7 +89,7 @@ ROOT_URLCONF = 'targendaapi.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,7 +136,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 API_VERSIONS = ['v1']
 DEFAULT_VERSION = 'v1'
-EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = 'c2d573d0bb5e43'
+EMAIL_HOST_PASSWORD = '8ba6f95986c533'
+EMAIL_PORT = '2525'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 STATIC_URL = '/static/'

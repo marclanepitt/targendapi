@@ -21,8 +21,10 @@ class UserCalendarRequestView(APIView):
 			wks = sh.worksheet_by_title("data_dump")
 			values = []
 			pk = self.request.query_params.get('id', None)
+
 			profile = get_object_or_404(UserProfile,user= pk)
 			user = get_object_or_404(User,pk=pk)
+			
 			request = CalendarRequest.objects.create(pending=True)
 			values.append(user.email)
 			values.append("new")

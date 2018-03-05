@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_auth.registration.views import RegisterView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_auth.views import PasswordResetView
 import json
 
 from . import serializers
@@ -20,6 +21,8 @@ from ...courseselect.models import Course
 # "auth":{"username":"q@q.com","password":"qqqqqqqq"}
 # }
 
+class PasswordResetFixView(PasswordResetView):
+    serializer_class = serializers.PasswordResetSerializerFix
 
 class KnoxLoginView(LoginView):
     def post(self, request, format=None):

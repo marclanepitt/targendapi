@@ -1,12 +1,17 @@
 from django.contrib.auth.models import User
 from rest_auth.registration.serializers import RegisterSerializer
+from rest_auth.serializers import PasswordResetSerializer
 from apps.tarcalendar.v1.serializers import CalendarRequestSerializer
 from rest_framework import serializers,exceptions
 from django.shortcuts import get_object_or_404
+from .forms import CustomPasswordResetForm
+
 
 
 from apps.users.models import UserProfile
 
+class PasswordResetSerializerFix(PasswordResetSerializer):
+    password_reset_form_class = CustomPasswordResetForm
 
 class UserProfileSerializer(serializers.ModelSerializer):
     cal_request = CalendarRequestSerializer()
