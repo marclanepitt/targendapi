@@ -24,7 +24,7 @@ DEV_KEY = 'h=&ob$p#6yym^%4^-nwwao^46zbt303q3kw#dm+)zt3&npbabf'
 SECRET_KEY = os.environ.get('SECRET_KEY', DEV_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG',False)
 
 ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ['127.0.0.1', 'localhost']
