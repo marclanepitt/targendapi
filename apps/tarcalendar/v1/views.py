@@ -17,7 +17,7 @@ class UserCalendarRequestView(APIView):
 	def get(self,request):
 		try:
 			gc = pygsheets.authorize()
-			sh = gc.open("Targenda Calendar Requests")
+			sh = gc.open("ClassCal Calendar Requests")
 			wks = sh.worksheet_by_title("data_dump")
 			values = []
 			pk = self.request.query_params.get('id', None)
@@ -51,7 +51,7 @@ class UserCalendarUndoView(APIView):
 	def get(self,request):
 		try:
 			gc = pygsheets.authorize()
-			sh = gc.open("Targenda Calendar Requests")
+			sh = gc.open("ClassCal Calendar Requests")
 			wks = sh.worksheet_by_title("data_dump")
 			pk = self.request.query_params.get('id', None)
 			profile = get_object_or_404(UserProfile,user= pk)
