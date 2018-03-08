@@ -308,3 +308,6 @@ try:
 except ImportError as e:
     # Running in production mode
     pass
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
