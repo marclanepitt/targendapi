@@ -7,7 +7,6 @@ from django.shortcuts import get_object_or_404
 from ..models import CalendarRequest
 from apps.users.v1.serializers import UserDetailSerializer
 from dateutil import tz
-import pygsheets
 
 from . import serializers
 
@@ -16,18 +15,13 @@ class UserCalendarRequestView(APIView):
 
 	def get(self,request):
 		try:
-			gc = pygsheets.authorize()
-			sh = gc.open("ClassCal Calendar Requests")
-			wks = sh.worksheet_by_title("data_dump")
 			values = []
 			pk = self.request.query_params.get('id', None)
 
 			profile = get_object_or_404(UserProfile,user= pk)
 			user = get_object_or_404(User,pk=pk)
 			
-			request = CalendarRequest.objects.create(pending=True)
 			values.append(user.email)
-			values.append("new")
 
 			utc = request.date
 			to_zone = tz.gettz('America/New_York')
@@ -37,7 +31,8 @@ class UserCalendarRequestView(APIView):
 
 			for course in profile.courses.all():
 				values.append('{} {}-{} {} ({})'.format(course.department,course.number,course.section,course.description,course.semester))
-			wks.insert_rows(row=0, number=1, values=values)
+			
+			request = CalendarRequest.objects.create(pending=True,description=" ".join(str(x) for x in values))
 			profile.cal_request = request
 			profile.save()
 			serializer = UserDetailSerializer(user)
@@ -50,27 +45,15 @@ class UserCalendarUndoView(APIView):
 
 	def get(self,request):
 		try:
-			gc = pygsheets.authorize()
-			sh = gc.open("ClassCal Calendar Requests")
-			wks = sh.worksheet_by_title("data_dump")
 			pk = self.request.query_params.get('id', None)
-			profile = get_object_or_404(UserProfile,user= pk)
 			user = get_object_or_404(User,pk=pk)
-			request = get_object_or_404(CalendarRequest,pk=profile.cal_request.id)
-			values = []
-			values.append(user.email)
-			values.append("cancelled")
-
-			utc = request.date
-			to_zone = tz.gettz('America/New_York')
-			corrected_date = utc.astimezone(to_zone)
-			values.append("{:%m/%d/%Y %H:%M:%S}".format(corrected_date))
-
-			wks.insert_rows(row=0, number=1, values=values)
+			profile = get_object_or_404(UserProfile,user= pk)
+			request = profile.cal_request
 			request.delete()
 			profile.cal_request = None
 			profile.save()
 			serializer = UserDetailSerializer(user)
 			return Response(serializer.data)
+
 		except Exception as err:
 			raise err
