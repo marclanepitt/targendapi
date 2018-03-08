@@ -24,7 +24,7 @@ DEV_KEY = 'h=&ob$p#6yym^%4^-nwwao^46zbt303q3kw#dm+)zt3&npbabf'
 SECRET_KEY = os.environ.get('SECRET_KEY', DEV_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ['127.0.0.1', 'localhost']
@@ -111,10 +111,9 @@ WSGI_APPLICATION = 'targendaapi.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
 }
 
 
