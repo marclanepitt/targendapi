@@ -23,12 +23,6 @@ class UserCalendarRequestView(APIView):
 			
 			values.append(user.email)
 
-			utc = request.date
-			to_zone = tz.gettz('America/New_York')
-			corrected_date = utc.astimezone(to_zone)
-			values.append("{:%m/%d/%Y %H:%M:%S}".format(corrected_date))
-
-
 			for course in profile.courses.all():
 				values.append('{} {}-{} {} ({})'.format(course.department,course.number,course.section,course.description,course.semester))
 			
