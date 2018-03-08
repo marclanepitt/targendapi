@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-import os
+import os,sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,14 +19,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+p0*hd7)!8*+gs#$b=v^pkzcj2@hr@6!s%!q$*1v(yyjj3+(vi'
+DEV_KEY = 'h=&ob$p#6yym^%4^-nwwao^46zbt303q3kw#dm+)zt3&npbabf'
+# TODO export as env var in prod
+SECRET_KEY = os.environ.get('SECRET_KEY', DEV_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-CORS_ORIGIN_ALLOW_ALL = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [host.strip() for host in os.environ.get('ALLOWED_HOSTS', '').split(',')]
 CORS_ALLOW_HEADERS = (
     'accept',
     'auth',
@@ -143,6 +143,14 @@ EMAIL_HOST_PASSWORD = '8ba6f95986c533'
 EMAIL_PORT = '2525'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'false').lower() == 'true'
+EMAIL_SSL_CERTFILE = None
+EMAIL_SSL_KEYFILE = None
+
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'dist')
@@ -186,6 +194,11 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USER_DISPLAY = lambda user: user.email
 ACCOUNT_USERNAME_REQUIRED = False
 
+#email config
+SERVER_EMAIL = 'no.reply@classcal.com'
+# Email address regular users receive mail from
+DEFAULT_FROM_EMAIL = 'no.reply@classcal.com'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -198,9 +211,106 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+DJANGO_LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(DJANGO_LOGS_DIR):
+    os.mkdir(DJANGO_LOGS_DIR)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[%(levelname)s] %(asctime)s %(pathname)s:%(lineno)d %(message)s'
+        },
+        'simple': {
+            'format': '[%(levelname)s] %(message)s'
+        },
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[%(server_time)s] %(message)s',
+        }
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'console_simple': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'console_verbose': {
+            'level': 'INFO',
+            'filters': [],
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'file_verbose': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(DJANGO_LOGS_DIR, 'server_log.log'),
+            'formatter': 'verbose'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
+            'include_html': True,
+        },
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+            'filters': ['require_debug_true'],
+        },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
+    },
+    'loggers': {
+        'django.server': {
+            'handlers': ['django.server'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console_simple'],
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['file_verbose', 'mail_admins'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        '': {
+            'handlers': ['file_verbose', 'console_verbose'],
+            'level': 'INFO',
+            'propagate': False,
+        }
+    }
+}
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+try:
+    # Running in testing mode
+    if len(sys.argv) > 1 and ('test' in sys.argv or 'behave' in sys.argv):
+        from .testing_settings import *  # noqa
+    else:
+        # Running in dev mode
+        from .local_settings import *  # noqa
+except ImportError as e:
+    # Running in production mode
+    pass
