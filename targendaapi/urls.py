@@ -35,11 +35,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from apps.users.v1.views import RegistrationView, KnoxLoginView,PasswordResetFixView
 
-v1_urls = [
+
+v1_urls = ([
     url(r'^users/', include('apps.users.v1.urls', namespace='users')),
     url(r'^courses/', include('apps.courseselect.v1.urls',namespace="courses")),
     url(r'^calendar/', include('apps.tarcalendar.v1.urls',namespace="calendar")),
-]
+],"v1")
 
 api_urls = [
     url(r'^', include('django.contrib.auth.urls')),
@@ -51,7 +52,7 @@ api_urls = [
     url(r'^auth/registration/', include('rest_auth.registration.urls')),
     url(r'^allauth/', include('allauth.urls')),
     url(r'^drf-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^v1/', include(v1_urls, namespace='v1')),
+    url(r'^v1/', include(v1_urls,namespace="v1")),
 ]
 
 urlpatterns = [

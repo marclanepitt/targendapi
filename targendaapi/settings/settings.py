@@ -24,9 +24,13 @@ DEV_KEY = 'h=&ob$p#6yym^%4^-nwwao^46zbt303q3kw#dm+)zt3&npbabf'
 SECRET_KEY = os.environ.get('SECRET_KEY', DEV_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = [host.strip() for host in os.environ.get('ALLOWED_HOSTS', '').split(',')]
+ALLOWED_HOSTS = ['*']
+INTERNAL_IPS = ['127.0.0.1', 'localhost']
+CORS_ORIGIN_ALLOW_ALL = True
+ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = [host.strip() for host in os.environ.get('ALLOWED_HOSTS', '').split(',')]
 CORS_ALLOW_HEADERS = (
     'accept',
     'auth',
@@ -59,7 +63,6 @@ INSTALLED_APPS = [
     'apps.tarcalendar',
     
     # 3rd party apps
-    'debug_toolbar',
     'django_extensions',
     'rest_framework',
     'django_filters',
@@ -80,7 +83,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
 
@@ -143,14 +145,6 @@ EMAIL_HOST_PASSWORD = '8ba6f95986c533'
 EMAIL_PORT = '2525'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'false').lower() == 'true'
-EMAIL_SSL_CERTFILE = None
-EMAIL_SSL_KEYFILE = None
-
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'dist')
@@ -166,7 +160,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'knox.auth.TokenAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',],
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_VERSION': DEFAULT_VERSION,
     'ALLOWED_VERSIONS': API_VERSIONS,

@@ -6,6 +6,7 @@ from collections import OrderedDict
 from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 from django.db.models import Manager
 from django.db.models.query import QuerySet
+from django.urls import NoReverseMatch, Resolver404, get_script_prefix, resolve
 from django.utils import six
 from django.utils.encoding import (
     python_2_unicode_compatible, smart_text, uri_to_iri
@@ -13,9 +14,6 @@ from django.utils.encoding import (
 from django.utils.six.moves.urllib import parse as urlparse
 from django.utils.translation import ugettext_lazy as _
 
-from rest_framework.compat import (
-    NoReverseMatch, Resolver404, get_script_prefix, resolve
-)
 from rest_framework.fields import (
     Field, empty, get_attribute, is_simple_callable, iter_options
 )
@@ -75,7 +73,8 @@ class PKOnlyObject(object):
 # rather than the parent serializer.
 MANY_RELATION_KWARGS = (
     'read_only', 'write_only', 'required', 'default', 'initial', 'source',
-    'label', 'help_text', 'style', 'error_messages', 'allow_empty'
+    'label', 'help_text', 'style', 'error_messages', 'allow_empty',
+    'html_cutoff', 'html_cutoff_text'
 )
 
 
@@ -86,10 +85,12 @@ class RelatedField(Field):
 
     def __init__(self, **kwargs):
         self.queryset = kwargs.pop('queryset', self.queryset)
-        self.html_cutoff = kwargs.pop(
-            'html_cutoff',
-            self.html_cutoff or int(api_settings.HTML_SELECT_CUTOFF)
-        )
+
+        cutoff_from_settings = api_settings.HTML_SELECT_CUTOFF
+        if cutoff_from_settings is not None:
+            cutoff_from_settings = int(cutoff_from_settings)
+        self.html_cutoff = kwargs.pop('html_cutoff', cutoff_from_settings)
+
         self.html_cutoff_text = kwargs.pop(
             'html_cutoff_text',
             self.html_cutoff_text or _(api_settings.HTML_SELECT_CUTOFF_TEXT)
@@ -466,10 +467,12 @@ class ManyRelatedField(Field):
     def __init__(self, child_relation=None, *args, **kwargs):
         self.child_relation = child_relation
         self.allow_empty = kwargs.pop('allow_empty', True)
-        self.html_cutoff = kwargs.pop(
-            'html_cutoff',
-            self.html_cutoff or int(api_settings.HTML_SELECT_CUTOFF)
-        )
+
+        cutoff_from_settings = api_settings.HTML_SELECT_CUTOFF
+        if cutoff_from_settings is not None:
+            cutoff_from_settings = int(cutoff_from_settings)
+        self.html_cutoff = kwargs.pop('html_cutoff', cutoff_from_settings)
+
         self.html_cutoff_text = kwargs.pop(
             'html_cutoff_text',
             self.html_cutoff_text or _(api_settings.HTML_SELECT_CUTOFF_TEXT)

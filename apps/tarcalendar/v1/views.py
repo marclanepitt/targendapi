@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from apps.users.models import UserProfile
@@ -12,7 +12,7 @@ import pygsheets
 from . import serializers
 
 class UserCalendarRequestView(APIView):
-	authentication_classes = (IsAuthenticated,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 	def get(self,request):
 		try:
@@ -46,7 +46,7 @@ class UserCalendarRequestView(APIView):
 			raise err
 
 class UserCalendarUndoView(APIView):
-	authentication_classes = (IsAuthenticated,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 	def get(self,request):
 		try:

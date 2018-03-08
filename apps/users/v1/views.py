@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_auth.views import PasswordResetView
 import json
-
+from rest_framework import permissions
 from . import serializers
 from ..models import UserProfile
 from ...courseselect.models import Course
@@ -38,7 +38,7 @@ class KnoxLoginView(LoginView):
 class UserDetailView(generics.RetrieveAPIView):
 
     queryset = User.objects.all()
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = serializers.UserDetailSerializer
 
     def get_object(self):
@@ -49,14 +49,14 @@ class UserDetailView(generics.RetrieveAPIView):
 
 class UserProfileCreateView(generics.CreateAPIView):
     serializer_class = serializers.UserProfileSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 class UserProfileListView(generics.ListAPIView):
     serializer_class = serializers.UserProfileSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class RegistrationView(RegisterView):
     def get_response_data(self, user):
@@ -67,7 +67,7 @@ class RegistrationView(RegisterView):
 class UserCourseAddView(generics.GenericAPIView,mixins.UpdateModelMixin):
     serializer_class = serializers.UserProfileSerializer
     queryset = UserProfile.objects.all()
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def put(self, request, *args, **kwargs):
         course_id = self.request.query_params.get('course', None)
@@ -87,7 +87,7 @@ class UserCourseAddView(generics.GenericAPIView,mixins.UpdateModelMixin):
 class UserCourseRemoveView(generics.GenericAPIView,mixins.UpdateModelMixin):
     serializer_class = serializers.UserProfileSerializer
     queryset = UserProfile.objects.all()
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def put(self, request, *args, **kwargs):
         course_id = self.request.query_params.get('course', None)

@@ -1,5 +1,5 @@
 from rest_framework import generics,mixins
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -10,7 +10,7 @@ from ..models import Course
 
 class CourseListView(generics.ListAPIView):
 	serializer_class = serializers.CourseSerializer
-	permission_classes = (IsAuthenticated,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 	def get_queryset(self):
 		queryset = Course.objects.filter(university=self.kwargs['university'])
@@ -29,7 +29,7 @@ class CourseListView(generics.ListAPIView):
 		return queryset
 
 class CourseFilterOptionsView(APIView):
-	authentication_classes = (IsAuthenticated,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	def get(self,request):
 		departments = Course.objects.order_by().values('department').distinct()
 		semesters = Course.objects.order_by().values('semester').distinct()
