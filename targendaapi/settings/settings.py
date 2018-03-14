@@ -271,7 +271,7 @@ LOGGING = {
             'level': 'WARNING',
             'propagate': False,
         },
-        '': {
+        'targendaapi': {
             'handlers': ['file_verbose', 'console_verbose'],
             'level': 'INFO',
             'propagate': False,
