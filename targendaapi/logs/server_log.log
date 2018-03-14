@@ -1174,3 +1174,7 @@ Traceback (most recent call last):
   File "/home/marclane/Desktop/Targenda/targendaapi/venv/lib/python3.5/site-packages/django/template/backends/django.py", line 125, in get_package_libraries
     "trying to load '%s': %s" % (entry[1], e)
 django.template.library.InvalidTemplateLibrary: Invalid template library specified. ImportError raised when trying to load 'crispy_forms.templatetags.crispy_forms_tags': No module named 'django.core.urlresolvers'
+[WARNING] 2018-03-14 14:15:35,474 /home/marclane/Desktop/Targenda/targendaapi/venv/lib/python3.5/site-packages/django/core/handlers/base.py:93 Not Found: /favicon.ico
+[WARNING] 2018-03-14 14:16:21,154 /home/marclane/Desktop/Targenda/targendaapi/venv/lib/python3.5/site-packages/django/core/handlers/base.py:93 Not Found: /favicon.ico
+[WARNING] 2018-03-14 14:16:25,446 /home/marclane/Desktop/Targenda/targendaapi/venv/lib/python3.5/site-packages/django/core/handlers/base.py:93 Not Found: /api/auth/password/rese
+[ERROR] 2018-03-14 14:23:10,129 /home/marclane/Desktop/Targenda/targendaapi/venv/lib/python3.5/site-packages/django/core/handlers/exception.py:74 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
