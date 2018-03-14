@@ -1,7 +1,6 @@
 import os
 from .settings import BASE_DIR
 
-DEBUG = False
 CORS_ORIGIN_ALLOW_ALL = False
 ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOST','*')]
 
