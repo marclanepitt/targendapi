@@ -286,7 +286,7 @@ LOGGING = {
 STATIC_URL = '/static/'
 
 if(os.environ.get('PRODUCTION')):
-    from production_settings import *
+    from .production_settings import *
 else:
     from .local_settings import *
 # Activate Django-Heroku.
