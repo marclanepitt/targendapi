@@ -35,7 +35,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from apps.users.v1.views import RegistrationView, KnoxLoginView,PasswordResetFixView
 
-
 v1_urls = ([
     url(r'^users/', include('apps.users.v1.urls', namespace='users')),
     url(r'^courses/', include('apps.courseselect.v1.urls',namespace="courses")),

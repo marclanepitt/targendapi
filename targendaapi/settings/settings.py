@@ -134,8 +134,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'dist')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -279,13 +278,8 @@ LOGGING = {
     }
 }
 
-STATIC_URL = '/static/'
 
 if(os.environ.get('PRODUCTION')):
-    # Activate Django-Heroku.
     from .production_settings import *
 else:
     from .local_settings import *
-
-import django_heroku
-django_heroku.settings(locals())
