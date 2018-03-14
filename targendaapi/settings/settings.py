@@ -287,8 +287,9 @@ STATIC_URL = '/static/'
 
 if(os.environ.get('PRODUCTION')):
     # Activate Django-Heroku.
-    import django_heroku
-    django_heroku.settings(locals())
     from .production_settings import *
 else:
     from .local_settings import *
+
+import django_heroku
+django_heroku.settings(locals())
