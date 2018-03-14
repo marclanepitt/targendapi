@@ -1,1 +1,2 @@
-web: python manage.py collectstatic --noinput gunicorn targendaapi.wsgi
+web: python manage.py collectstatic --noinput
+web: gunicorn targendaapi.wsgi
