@@ -199,84 +199,17 @@ if not os.path.exists(DJANGO_LOGS_DIR):
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '[%(levelname)s] %(asctime)s %(pathname)s:%(lineno)d %(message)s'
-        },
-        'simple': {
-            'format': '[%(levelname)s] %(message)s'
-        },
-        'django.server': {
-            '()': 'django.utils.log.ServerFormatter',
-            'format': '[%(server_time)s] %(message)s',
-        }
-    },
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
     'handlers': {
-        'console_simple': {
-            'level': 'INFO',
-            'filters': ['require_debug_true'],
+        'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        },
-        'console_verbose': {
-            'level': 'INFO',
-            'filters': [],
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        },
-        'file_verbose': {
-            'level': 'INFO',
-            'filters': ['require_debug_false'],
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(DJANGO_LOGS_DIR, 'server_log.log'),
-            'formatter': 'verbose'
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'filters': ['require_debug_false'],
-            'include_html': True,
-        },
-        'null': {
-            'level': 'DEBUG',
-            'class': 'logging.NullHandler',
-            'filters': ['require_debug_true'],
-        },
-        'django.server': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'django.server',
         },
     },
     'loggers': {
-        'django.server': {
-            'handlers': ['django.server'],
-            'level': 'INFO',
-            'propagate': False,
-        },
         'django': {
-            'handlers': ['console_simple'],
-            'propagate': True,
+            'handlers': ['console'],
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'ERROR'),
         },
-        'django.request': {
-            'handlers': ['file_verbose', 'mail_admins'],
-            'level': 'WARNING',
-            'propagate': False,
-        },
-        'targendaapi': {
-            'handlers': ['file_verbose', 'console_verbose'],
-            'level': 'INFO',
-            'propagate': False,
-        }
-    }
+    },
 }
 
 
