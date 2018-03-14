@@ -17,7 +17,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     cal_request = CalendarRequestSerializer()
     class Meta:
         model = UserProfile
-        fields = ("id", "major", "graduation_year","courses","cal_request")
+        fields = ("id","courses","cal_request")
 
 class UserDetailSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
@@ -47,8 +47,6 @@ class UserDetailRestKnoxFix(serializers.ModelSerializer):
 class RegistrationSerializer(RegisterSerializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
-    major = serializers.CharField()
-    graduation_year = serializers.DateField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -56,7 +54,7 @@ class RegistrationSerializer(RegisterSerializer):
 
     def custom_signup(self, request,user):
         data = self.validated_data
-        UserProfile.objects.create(major=data['major'],graduation_year=data['graduation_year'], user=user)
+        UserProfile.objects.create(user=user)
 
     def get_cleaned_data(self):
         data = super().get_cleaned_data()

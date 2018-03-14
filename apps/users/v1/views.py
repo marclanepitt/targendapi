@@ -60,8 +60,11 @@ class UserProfileListView(generics.ListAPIView):
 
 class RegistrationView(RegisterView):
     def get_response_data(self, user):
-        data = super().get_response_data(user)
-        return data
+        token = AuthToken.objects.create(user)
+        UserSerializer = knox_settings.USER_SERIALIZER
+        user_corrected_data = UserSerializer(user).data
+        user_corrected_data['token'] = token
+        return user_corrected_data
 
 
 class UserCourseAddView(generics.GenericAPIView,mixins.UpdateModelMixin):

@@ -26,10 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', DEV_KEY)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG',False)
 
-ALLOWED_HOSTS = ['*']
-INTERNAL_IPS = ['127.0.0.1', 'localhost']
-CORS_ORIGIN_ALLOW_ALL = True
-ALLOWED_HOSTS = ['*']
+
 # ALLOWED_HOSTS = [host.strip() for host in os.environ.get('ALLOWED_HOSTS', '').split(',')]
 CORS_ALLOW_HEADERS = (
     'accept',
@@ -133,10 +130,6 @@ AUTH_PASSWORD_VALIDATORS = [
 API_VERSIONS = ['v1']
 DEFAULT_VERSION = 'v1'
 
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = 'c2d573d0bb5e43'
-EMAIL_HOST_PASSWORD = '8ba6f95986c533'
-EMAIL_PORT = '2525'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
@@ -177,7 +170,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 
 # Django all auth
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USER_DISPLAY = lambda user: user.email
 ACCOUNT_USERNAME_REQUIRED = False
@@ -292,17 +285,10 @@ LOGGING = {
 
 STATIC_URL = '/static/'
 
-try:
-    # Running in testing mode
-    if len(sys.argv) > 1 and ('test' in sys.argv or 'behave' in sys.argv):
-        from .testing_settings import *  # noqa
-    else:
-        # Running in dev mode
-        from .local_settings import *  # noqa
-except ImportError as e:
-    # Running in production mode
-    pass
-
+if(os.environ.get('PRODUCTION')):
+    from production_settings import *
+else:
+    from .local_settings import *
 # Activate Django-Heroku.
 import django_heroku
 django_heroku.settings(locals())
