@@ -11,7 +11,7 @@ class University(models.Model):
 		return self.name
 
 class CourseImage(models.Model):
-	image = models.ImageField()
+	image = models.CharField(max_length=500)
 
 	def __str__(self):
 		return self.image.name
