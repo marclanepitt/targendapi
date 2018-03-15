@@ -6,7 +6,7 @@ from apps.courseselect.models import Course,CourseImage
 class CourseImageSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = CourseImage
-		fields = ["image"]
+		fields = ["image","name",]
 
 class CourseSerializer(serializers.ModelSerializer):
 	image = CourseImageSerializer()

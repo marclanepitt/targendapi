@@ -12,9 +12,10 @@ class University(models.Model):
 
 class CourseImage(models.Model):
 	image = models.CharField(max_length=500)
+	name = models.CharField(max_length=20)
 
 	def __str__(self):
-		return self.image
+		return self.name
 
 class Course(models.Model):
 	university = models.ForeignKey(University,on_delete=models.CASCADE)
