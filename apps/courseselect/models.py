@@ -14,7 +14,7 @@ class CourseImage(models.Model):
 	image = models.CharField(max_length=500)
 
 	def __str__(self):
-		return self.image.name
+		return self.image
 
 class Course(models.Model):
 	university = models.ForeignKey(University,on_delete=models.CASCADE)
