@@ -5,8 +5,11 @@ from apps.tarcalendar.v1.serializers import CalendarRequestSerializer
 from rest_framework import serializers,exceptions
 from django.shortcuts import get_object_or_404
 from .forms import CustomPasswordResetForm
-
-
+from django.utils.translation import ugettext_lazy as _
+from allauth.account.adapter import get_adapter
+from allauth.account import app_settings as allauth_settings
+from allauth.utils import (email_address_exists,
+get_username_max_length)
 
 from apps.users.models import UserProfile
 
@@ -62,3 +65,16 @@ class RegistrationSerializer(RegisterSerializer):
         data['first_name'] = self.validated_data.get('first_name')
         data['last_name'] = self.validated_data.get('last_name')
         return data
+
+    def validate_email(self, email):
+        email = get_adapter().clean_email(email)
+        if allauth_settings.UNIQUE_EMAIL:
+            if email and email_address_exists(email):
+                raise serializers.ValidationError(
+                    _("A user is already registered with this e-mail address."))
+            if "live.unc.edu" not in email:
+                raise serializers.ValidationError(
+                    _("You must register with a valid UNC Heelmail account.")
+                    ) 
+
+        return email
