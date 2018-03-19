@@ -10,6 +10,7 @@ EMAIL_PORT = os.environ.get('MAILGUN_SMTP_PORT')
 INSTALLED_APPS = INSTALLED_APPS + [
     'raven.contrib.django.raven_compat',
 ]
+SECURE_SSL_REDIRECT=True
 
 
 import django_heroku
