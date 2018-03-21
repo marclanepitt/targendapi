@@ -34,6 +34,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from apps.users.v1.views import RegistrationView, KnoxLoginView,PasswordResetFixView
+from .views import IndexView
 
 v1_urls = ([
     url(r'^users/', include('apps.users.v1.urls', namespace='users')),
@@ -55,6 +56,7 @@ api_urls = [
 ]
 
 urlpatterns = [
+    url(r'^$', IndexView, name='index'),
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(api_urls)),
 ]
