@@ -13,7 +13,7 @@ class CourseListView(generics.ListAPIView):
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 	def get_queryset(self):
-		queryset = Course.objects.filter(university=self.kwargs['university'])
+		queryset = Course.objects.filter(university=self.kwargs['university']).order_by('department', 'number')
 		department = self.request.query_params.get('department', None)
 		if department is not None:
 			queryset = queryset.filter(department=department)
